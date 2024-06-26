@@ -28,7 +28,7 @@ while not zipcode:
 y = input('''
           Now, please describe to me some dietary preferences.
           ''')
-
+""" 
 #initialize client with API key from .env
 client = OpenAI(
   api_key = os.getenv('OPENAI_API_KEY'),
@@ -59,21 +59,27 @@ for chunk in stream:
     test += chunk.choices[0].delta.content
 #ans = json.loads(test)
 print(test)
+ """
+'''
+call google maps nearby place(zipcode, resturant type)
+return json of all the places
+enter json['places'] into database
+
+output 5 restaurants
+'''
 
 
-location_results = {"Burgers": ["Burger King", "McDonalds", "Local Diner", "Wendy's"]}
+
+
+location_results = {"Burgers": ["Burger King", "McDonalds", "Wendy's"], "Hispanic":["Taco Bell", "Chipotle", "Tacoria"]}
 df = pd.DataFrame.from_dict(location_results)
-engine = db.create_engine('sqlite:///resturants.db')
+engine = db.create_engine('sqlite:///restaurants.db')
 
 df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
 
 with engine.connect() as connection:
   query_result = connection.execute(db.text("SELECT * FROM Reccomendations;")).fetchall()
   print(pd.DataFrame(query_result))
-
-
-
-
 
 
 
