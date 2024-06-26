@@ -23,7 +23,6 @@ def get_recs(zip): # def get_recs(query, zip):
         '''
         recs = {}
 
-       
         for r in response['results']:  # if needed
             # potential fields of interest:
             recs[r['name']] = (r['formatted_address'], r['rating'], r.get('price_level', 'Unknown'))
