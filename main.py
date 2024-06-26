@@ -1,6 +1,7 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
+import re
 
 #import requests
 #import pandas as pd
@@ -9,30 +10,49 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+zipcode = False
+
+while not zipcode:
+  x = input('''
+          Hello! I'm your personalized AI Assistant ready to provide local restaurant 
+          reccomendations. Please describe your preferences. Firstly, what is your
+          zip code?
+          '''
+)
+  pattern = r"^\d{5}$"
+  match = re.match(pattern, x)
+  if match:
+    print(match)
+    zipcode = True
+
+y = input('''
+          Now, please describe to me some dietary preferences.
+          ''')
+
 #initialize client with API key from .env
 client = OpenAI(
   api_key = os.getenv('OPENAI_API_KEY'),
-)
-x = input('''
-          Hello! I'm your personalized AI Assistant ready to provide local restaurant reccomendations. 
-          Please describe your preferences. Zip Code is required.
-          '''
 )
 #Starting a chat with GPT3.5
 stream = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
       {"role": "system", "content": '''
-       You are a helpful nutritionist designed to provide local reccomendations. Provide reccomendations based on my
-       preferences. You must return output in a short query text (less than 4 words preferably) to be inputted for a Google
-       Maps Search. If the user has a specific food in mind, please return a query in format: {food} near {zipcode}
+       Based off the user input, return an appropriate query (of 4 words or less) 
+       that could be inputted into Google Maps. The user is looking for places to eat.
+       Please take into account what type of food they want. For example, if the person
+       mentions that they're vegan, a good query would be something like "vegan food
+       near me.
        '''},
       {"role": "user", "content": '''
-    {x}} 
+    I have a preference for {y}}
     '''}],
     
     stream=True,
 )
+
+#regex for 5 digit zip code, /^\d{5}$/
+#https://skillforge.com/how-to-use-javascript-regular-expressions/#:~:text=So%20%5E%5Cd%7B5%7D,must%20start%20with%20five%20numbers.
 test = ""
 for chunk in stream:
   if chunk.choices[0].delta.content:
@@ -40,13 +60,22 @@ for chunk in stream:
 #ans = json.loads(test)
 print(test)
 
-##for key in ans:
+
+#old logic for formatting into JSON properly
+#for key in ans:
 #  if isinstance(ans[key], list):
 #    ans[key] = '. '.join([str(item) for item in ans[key]])
 
+#takes in dict
 #epic = pd.DataFrame.from_dict([ans])
+
+#creates db
 #engine = db.create_engine('sqlite:///placeholder.db')
+
+#converts to sql
 #epic.to_sql('Responses', con=engine, if_exists='replace', index=False)
+
+#for loop while engine is active, performs query, prints result
 #with engine.connect() as connection:
 #  query_result = connection.execute(db.text("SELECT * FROM Responses;")).fetchall()
 #  print(pd.DataFrame(query_result))
