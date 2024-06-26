@@ -20,10 +20,16 @@ def get_recs(zip): # def get_recs(query, zip):
         '''
         response = gmaps.places(query=querie, location=geocode_result, type="restaurant", open_now=True)
         
+        '''
         recs = {}
 
-        #for r in response['results']: 
-        # potential fields of interest: ['name'], ['formatted address'], ['price_level'], ['rating']
+       
+        for r in response['results']:  # if needed
+            # potential fields of interest:
+            recs[r['name']] = (r['formatted_address'], r['rating'], r.get('price_level', 'Unknown'))
+
+        return recs
+        '''
 
         return response
 
