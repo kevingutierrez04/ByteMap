@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 import re
 
 #import requests
-#import pandas as pd
-#import sqlalchemy as db
+import pandas as pd
+import sqlalchemy as db
 #import json
 
 load_dotenv()
@@ -59,6 +59,22 @@ for chunk in stream:
     test += chunk.choices[0].delta.content
 #ans = json.loads(test)
 print(test)
+
+
+location_results = {"Burgers": ["Burger King", "McDonalds", "Local Diner", "Wendy's"]}
+df = pd.DataFrame.from_dict(location_results)
+engine = db.create_engine('sqlite:///resturants.db')
+
+df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
+
+with engine.connect() as connection:
+  query_result = connection.execute(db.text("SELECT * FROM Reccomendations;")).fetchall()
+  print(pd.DataFrame(query_result))
+
+
+
+
+
 
 
 #old logic for formatting into JSON properly
