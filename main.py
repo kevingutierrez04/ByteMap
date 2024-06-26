@@ -14,13 +14,13 @@ zipcode = False
 
 while not zipcode:
     x = input('''
-        Hello! I'm your personalized AI Assistant ready 
-        to provide local restaurant reccomendations. 
-        Please describe your preferences. Firstly, 
-        what is your
-        zip code?
-        '''
-    )
+Hello! I'm your personalized AI Assistant ready
+to provide local restaurant reccomendations.
+Please describe your preferences.
+Firstly, what is your zip code?
+'''
+              )
+
     pattern = r"^\d{5}$"
     match = re.match(pattern, x)
     if match:
@@ -28,24 +28,28 @@ while not zipcode:
         zipcode = True
 
 y = input('''
-    Now, please describe to me some dietary preferences.
+Now, please describe to me some dietary preferences.
     ''')
 
 # initialize client with API key from .env
 client = OpenAI(
-    api_key = os.getenv('OPENAI_API_KEY'),
+    api_key=os.getenv('OPENAI_API_KEY'),
 )
 # Starting a chat with GPT3.5
 stream = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": '''
-        Based off the user input, return an appropriate query (of 4 words or less) 
-        that could be inputted into Google Maps. The user is looking for places to eat.
-        Please take into account what type of food they want. For example, if the person
-        mentions that they're vegan, a good query would be something like "vegan food
-        near me.
-        '''},
+Based off the user input, return an appropriate query\
+(of 4 words or less)\
+ that could be inputted into Google Maps.
+The user is looking for places to eat. \
+Please take into account what type of food they want.
+For example, if the person mentions that they're \
+vegan, a good query would be something like \
+"vegan food near me.
+'''
+         },
         {"role": "user", "content": '''
         I have a preference for {y}}
         '''}],
@@ -69,21 +73,18 @@ enter json['places'] into database
 output 5 restaurants
 '''
 
-
-
-
-location_results = {"Burgers": ["Burger King", "McDonalds", "Wendy's"], 
-                    "Hispanic":["Taco Bell", "Chipotle", "Tacoria"]}
+location_results = {"Burgers": ["Burger King", "McDonalds", "Wendy's"],
+                    "Hispanic": ["Taco Bell", "Chipotle", "Tacoria"]}
 df = pd.DataFrame.from_dict(location_results)
 engine = db.create_engine('sqlite:///restaurants.db')
 
 df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
 
 with engine.connect() as connection:
-    query_result = connection.execute(db.text("SELECT * FROM Reccomendations;")).fetchall()
+    query_result = connection.execute(
+        db.text("SELECT * FROM Reccomendations;")
+        ).fetchall()
     print(pd.DataFrame(query_result))
-
-
 
 # old logic for formatting into JSON properly
 # for key in ans:
@@ -101,6 +102,7 @@ with engine.connect() as connection:
 
 # for loop while engine is active, performs query, prints result
 # with engine.connect() as connection:
-#   query_result = connection.execute(db.text("SELECT * FROM Responses;")).fetchall()
+#   query_result = connection.execute(db.text("SELECT * FROM Responses;")
+#            ).fetchall()
 #   print(pd.DataFrame(query_result))
 #   print(chunk.choices[0].delta.content, end="")
