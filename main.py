@@ -14,7 +14,7 @@ def getInput():
 
     while not zipcode:
         x = input('''
-    Hello! I'm your personalized AI Assistant ready
+    Hello! Welcome to ByteMap. I'm your personalized AI Assistant ready
     to provide local restaurant reccomendations.
     Please describe your preferences.
     Firstly, what is your zip code?
@@ -126,7 +126,7 @@ def printResults(zipcode, food, sort):
             ans = input("Would you like more reccomendations? (y/n): ")
             print()
 
-    print("Thank you for using INSERT NAME, I hope that you have a wonderful meal from the restaurant you chose")
+    print("Thank you for using ByteMap, I hope that you have a wonderful meal from the restaurant you chose")
 
 if __name__ == "__main__":
     zipcode, food, sort = getInput()
