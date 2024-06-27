@@ -47,9 +47,9 @@ Based off the user input, return an appropriate query\
  that could be inputted into Google Maps.
 The user is looking for places to eat. \
 Please take into account what type of food they want.
-For example, if the person mentions that they're \
-vegan, a good query would be something like \
-"vegan food near me.
+For example, if the person inputs "meatless" \
+a good query would be something like \
+"vegan food near me"
 '''
          },
         {"role": "user", "content": '''

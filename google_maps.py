@@ -22,6 +22,7 @@ def get_recs(zip):  # def get_recs(query, zip):
             query=querie,
             location=geocode_result,
             type="restaurant",
+            radius='16093',
             open_now=True
             )
 
