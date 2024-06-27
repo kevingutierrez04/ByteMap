@@ -67,20 +67,32 @@ for chunk in stream:
 print(test)
 """
 '''
+per person
     0: Free
-    1: Inexpensive
-    2: Moderate
-    3: Expensive
-    4: Very Expensive 
+    1: Inexpensive (<=$10)
+    2: Moderate ($10 - $25)
+    3: Expensive ($25 - $45)
+    4: Very Expensive (>=$45)
 '''
 
+prices = {
+    "0.0": "Free",
+    "1.0": "<= $10",
+    "2.0": "$10 - $25",
+    "3.0": "$25 - $45",
+    "4.0": ">= $45"
+}
 
 results = get_recs(x, y)['results']
 df = pd.DataFrame.from_dict(results)
 df = df.astype(str)
+df['price_level'] = df['price_level'].map(prices)
+
 engine = db.create_engine('sqlite:///restaurants.db')
 
+
 df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
+print("Here are the Top 5 Reccomended Restaurants near you")
 
 with engine.connect() as connection:
     connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN vicinity to address;"))
