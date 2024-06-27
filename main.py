@@ -30,7 +30,8 @@ Firstly, what is your zip code?
 
 y = input('''
 Now, please describe to me some dietary preferences.
-    ''')
+'''
+          )
 """ 
 # initialize client with API key from .env
 client = OpenAI(
@@ -72,21 +73,26 @@ return json of all the places
 enter json['places'] into database
 
 output 5 restaurants
-'''
-""" 
-location_results = {"Burgers": ["Burger King", "McDonalds", "Wendy's"],
-                    "Hispanic": ["Taco Bell", "Chipotle", "Tacoria"]}
- """
 
-results = get_recs(x)
-df = pd.DataFrame.from_dict(results['results'])
+
+    0: Free
+    1: Inexpensive
+    2: Moderate
+    3: Expensive
+    4: Very Expensive 
+'''
+
+
+results = get_recs(x)['results']
+df = pd.DataFrame.from_dict(results)
 df = df.astype(str)
 engine = db.create_engine('sqlite:///restaurants.db')
 
 df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
 
 with engine.connect() as connection:
+    connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN formatted_address to address;"))
     query_result = connection.execute(
-        db.text("SELECT * FROM Reccomendations;")
+        db.text("SELECT name, address, price_level, rating FROM Reccomendations LIMIT 5;")
         ).fetchall()
     print(pd.DataFrame(query_result))
