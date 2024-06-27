@@ -82,21 +82,34 @@ prices = {
     "3.0": "$25 - $45",
     "4.0": ">= $45"
 }
-
+engine = db.create_engine('sqlite:///restaurants.db')
+ans = "y"
 results = get_recs(x, y)['results']
 df = pd.DataFrame.from_dict(results)
 df = df.astype(str)
 df['price_level'] = df['price_level'].map(prices)
 
-engine = db.create_engine('sqlite:///restaurants.db')
-
-
 df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
+vicinity_renamed = False
+
 print("Here are the Top 5 Reccomended Restaurants near you")
 
 with engine.connect() as connection:
-    connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN vicinity to address;"))
-    query_result = connection.execute(
-        db.text("SELECT name, address, rating, price_level FROM Reccomendations LIMIT 5;")
-        ).fetchall()
-    print(pd.DataFrame(query_result))
+    if not vicinity_renamed:
+        connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN vicinity to address;"))
+        vicinity_renamed = True
+    table = connection.execute(
+        db.text("SELECT name, address, rating, price_level FROM Reccomendations;")
+        )
+    while ans != "n":
+        
+        query_result = table.fetchmany(5)
+        if len(query_result) == 0:
+            print("There are no more reccomendations")
+            break
+        print(pd.DataFrame(query_result))
+        print()
+        ans = input("Would you like more reccomendations? (y/n): ")
+        print()
+
+print("Thank you for using INSERT NAME, I hope that you have a wonderful meal from the restaurant you chose")
