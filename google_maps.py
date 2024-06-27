@@ -9,19 +9,28 @@ GMAPS_K = os.environ.get('GMAPS_KEY')
 gmaps = googlemaps.Client(key=GMAPS_K)
 
 
-def get_recs(zip, query):  # def get_recs(query, zip):
+def get_recs(zip, query, sort = "prominence"):  # def get_recs(query, zip):
     try:
         geocode_result = gmaps.geocode(zip)[0]['geometry']['location']
         # querie = "Spicy vegetarian food"
         '''
         url = 'https://places.googleapis.com/v1/places:\f{query}'
         '''
-        response = gmaps.places_nearby(
-            location=geocode_result, 
-            radius='16093', 
-            keyword=query, 
-            open_now=True
-            )
+        if sort == "prominence":
+            response = gmaps.places_nearby(
+                location=geocode_result, 
+                radius='16093', 
+                keyword=query, 
+                open_now=True,
+                rank_by=sort
+                )
+        else:
+            response = gmaps.places_nearby(
+                location=geocode_result,  
+                keyword=query, 
+                open_now=True,
+                rank_by=sort
+                )
         '''
         recs = {}
 

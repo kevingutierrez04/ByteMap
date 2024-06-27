@@ -84,7 +84,16 @@ prices = {
 }
 engine = db.create_engine('sqlite:///restaurants.db')
 ans = "y"
-results = get_recs(x, y)['results']
+sorting = input("Would you like the results sorted by Prominence (Default), distance, or ratings?: ")
+
+if sorting == "":
+    sorting = "prominence"
+
+if sorting == "ratings":
+    results = get_recs(x, y)['results']
+else:
+    results = get_recs(x, y, sorting)['results']
+
 df = pd.DataFrame.from_dict(results)
 df = df.astype(str)
 df['price_level'] = df['price_level'].map(prices)
@@ -98,9 +107,14 @@ with engine.connect() as connection:
     if not vicinity_renamed:
         connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN vicinity to address;"))
         vicinity_renamed = True
-    table = connection.execute(
-        db.text("SELECT name, address, rating, price_level FROM Reccomendations;")
-        )
+    if sorting == "ratings":
+        table = connection.execute(
+            db.text("SELECT name, address, rating, price_level FROM Reccomendations ORDER BY rating DESC;")
+            )
+    else:
+        table = connection.execute(
+            db.text("SELECT name, address, rating, price_level FROM Reccomendations;")
+            )
     while ans != "n":
         
         query_result = table.fetchmany(5)
