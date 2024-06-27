@@ -83,8 +83,8 @@ engine = db.create_engine('sqlite:///restaurants.db')
 df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
 
 with engine.connect() as connection:
-    connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN formatted_address to address;"))
+    connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN vicinity to address;"))
     query_result = connection.execute(
-        db.text("SELECT name, address, price_level, rating FROM Reccomendations LIMIT 5;")
+        db.text("SELECT name, address, rating, price_level FROM Reccomendations LIMIT 5;")
         ).fetchall()
     print(pd.DataFrame(query_result))

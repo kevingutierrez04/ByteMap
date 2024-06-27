@@ -12,20 +12,16 @@ gmaps = googlemaps.Client(key=GMAPS_K)
 def get_recs(zip):  # def get_recs(query, zip):
     try:
         geocode_result = gmaps.geocode(zip)[0]['geometry']['location']
-        querie = {
-            "textQuery": f"Spicy Vegetarian Food near {geocode_result}"
-        }
+        querie = "Spicy vegetarian food"
         '''
         url = 'https://places.googleapis.com/v1/places:\f{query}'
         '''
-        response = gmaps.places(
-            query=querie,
-            location=geocode_result,
-            type="restaurant",
-            radius='16093',
+        response = gmaps.places_nearby(
+            location=geocode_result, 
+            radius='16093', 
+            keyword=querie, 
             open_now=True
             )
-
         '''
         recs = {}
 
