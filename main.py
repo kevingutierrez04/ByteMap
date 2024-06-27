@@ -2,7 +2,6 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 import re
-from google_maps import get_recs
 
 # import requests
 import pandas as pd
@@ -31,7 +30,7 @@ Firstly, what is your zip code?
 y = input('''
 Now, please describe to me some dietary preferences.
     ''')
-""" 
+
 # initialize client with API key from .env
 client = OpenAI(
     api_key=os.getenv('OPENAI_API_KEY'),
@@ -65,7 +64,7 @@ for chunk in stream:
         test += chunk.choices[0].delta.content
 # ans = json.loads(test)
 print(test)
- """
+
 '''
 call google maps nearby place(zipcode, resturant type)
 return json of all the places
@@ -73,14 +72,10 @@ enter json['places'] into database
 
 output 5 restaurants
 '''
-""" 
+
 location_results = {"Burgers": ["Burger King", "McDonalds", "Wendy's"],
                     "Hispanic": ["Taco Bell", "Chipotle", "Tacoria"]}
- """
-
-results = get_recs(x)
-df = pd.DataFrame.from_dict(results['results'])
-df = df.astype(str)
+df = pd.DataFrame.from_dict(location_results)
 engine = db.create_engine('sqlite:///restaurants.db')
 
 df.to_sql('Reccomendations', con=engine, if_exists='replace', index=False)
@@ -90,3 +85,24 @@ with engine.connect() as connection:
         db.text("SELECT * FROM Reccomendations;")
         ).fetchall()
     print(pd.DataFrame(query_result))
+
+# old logic for formatting into JSON properly
+# for key in ans:
+#   if isinstance(ans[key], list):
+#       ans[key] = '. '.join([str(item) for item in ans[key]])
+
+# takes in dict
+# epic = pd.DataFrame.from_dict([ans])
+
+# creates db
+# engine = db.create_engine('sqlite:///placeholder.db')
+
+# converts to sql
+# epic.to_sql('Responses', con=engine, if_exists='replace', index=False)
+
+# for loop while engine is active, performs query, prints result
+# with engine.connect() as connection:
+#   query_result = connection.execute(db.text("SELECT * FROM Responses;")
+#            ).fetchall()
+#   print(pd.DataFrame(query_result))
+#   print(chunk.choices[0].delta.content, end="")
