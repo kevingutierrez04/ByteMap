@@ -2,7 +2,7 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 import re
-
+from google_maps import get_recs
 # import requests
 import pandas as pd
 import sqlalchemy as db
@@ -65,15 +65,8 @@ for chunk in stream:
         test += chunk.choices[0].delta.content
 # ans = json.loads(test)
 print(test)
-
+"""
 '''
-call google maps nearby place(zipcode, resturant type)
-return json of all the places
-enter json['places'] into database
-
-output 5 restaurants
-
-
     0: Free
     1: Inexpensive
     2: Moderate
@@ -95,24 +88,3 @@ with engine.connect() as connection:
         db.text("SELECT name, address, price_level, rating FROM Reccomendations LIMIT 5;")
         ).fetchall()
     print(pd.DataFrame(query_result))
-
-# old logic for formatting into JSON properly
-# for key in ans:
-#   if isinstance(ans[key], list):
-#       ans[key] = '. '.join([str(item) for item in ans[key]])
-
-# takes in dict
-# epic = pd.DataFrame.from_dict([ans])
-
-# creates db
-# engine = db.create_engine('sqlite:///placeholder.db')
-
-# converts to sql
-# epic.to_sql('Responses', con=engine, if_exists='replace', index=False)
-
-# for loop while engine is active, performs query, prints result
-# with engine.connect() as connection:
-#   query_result = connection.execute(db.text("SELECT * FROM Responses;")
-#            ).fetchall()
-#   print(pd.DataFrame(query_result))
-#   print(chunk.choices[0].delta.content, end="")
