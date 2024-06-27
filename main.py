@@ -75,7 +75,7 @@ print(test)
 '''
 
 
-results = get_recs(x)['results']
+results = get_recs(x, y)['results']
 df = pd.DataFrame.from_dict(results)
 df = df.astype(str)
 engine = db.create_engine('sqlite:///restaurants.db')

@@ -9,17 +9,17 @@ GMAPS_K = os.environ.get('GMAPS_KEY')
 gmaps = googlemaps.Client(key=GMAPS_K)
 
 
-def get_recs(zip):  # def get_recs(query, zip):
+def get_recs(zip, query):  # def get_recs(query, zip):
     try:
         geocode_result = gmaps.geocode(zip)[0]['geometry']['location']
-        querie = "Spicy vegetarian food"
+        # querie = "Spicy vegetarian food"
         '''
         url = 'https://places.googleapis.com/v1/places:\f{query}'
         '''
         response = gmaps.places_nearby(
             location=geocode_result, 
             radius='16093', 
-            keyword=querie, 
+            keyword=query, 
             open_now=True
             )
         '''
