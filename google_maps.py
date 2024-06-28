@@ -22,14 +22,16 @@ def get_recs(zip, query, sort="prominence"):  # def get_recs(query, zip):
                 radius='16093',
                 keyword=query,
                 open_now=True,
-                rank_by=sort
+                rank_by=sort,
+                type="restaurant"
                 )
         else:
             response = gmaps.places_nearby(
                 location=geocode_result,
                 keyword=query,
                 open_now=True,
-                rank_by=sort
+                rank_by=sort,
+                type="restaurant"
                 )
         '''
         recs = {}
