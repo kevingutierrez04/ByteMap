@@ -15,13 +15,14 @@ class create():
 
 
 def getInput():
+
     zipcode = False
     print()
     while not zipcode:
         print()
         x = input(
             "Hello! Welcome to ByteMap. I'm your personalized "
-            '''assistant ready to provide local restaurant recommendations.'''
+            "assistant ready to provide local restaurant recommendations."
             "\nPlease describe your preferences. Firstly, what is your"
             " zip code?\n")
 
@@ -33,7 +34,7 @@ def getInput():
     y = input("Now, please describe to me some dietary preferences.\n")
 
     sorting = input("Would you like the results sorted by"
-                    " Prominence (Default), distance, or ratings?: \n")
+                    " prominence (default), distance, or ratings?: \n")
     return x, y, sorting
 
 
@@ -63,22 +64,23 @@ def printResults(zipcode, food, sort):
     df.to_sql('Recommendations', con=engine, if_exists='replace', index=False)
     vicinity_renamed = False
 
-    print("Here are the Top 5 Recommended Restaurants near you")
+    print("Here are the Top 5 Recommended Restaurants Near You")
 
     with engine.connect() as connection:
         if not vicinity_renamed:
-            connection.execute(db.text("ALTER TABLE Recommendations RENAME \
-                                       COLUMN vicinity to address;"))
+            connection.execute(db.text("ALTER TABLE Recommendations RENAME "
+                                       "COLUMN vicinity to address;"))
             vicinity_renamed = True
         if sort == "ratings":
             table = connection.execute(
-                db.text("SELECT name, address, rating, price_level FROM \
-                        Recommendations ORDER BY rating DESC;")
+                db.text("SELECT name, address, rating, "
+                        "price_level FROM Recommendations "
+                        "ORDER BY rating DESC;")
                 )
         else:
             table = connection.execute(
-                db.text("SELECT name, address, rating, price_level FROM \
-                        Recommendations;")
+                db.text("SELECT name, address, rating, "
+                        "price_level FROM Recommendations;")
                 )
 
         cr = create()
@@ -86,14 +88,14 @@ def printResults(zipcode, food, sort):
         while ans != "n":
             query_result = table.fetchmany(5)
             if len(query_result) == 0:
-                print("There are no more Recommendations")
+                print("There are no more recommendations")
                 break
             print(pd.DataFrame(query_result))
             print()
             if cr.an == 'n':
                 ans = 'n'
             else:
-                ans = input("Would you like more Recommendations? (y/n): ")
+                ans = input("Would you like more recommendations? (y/n): ")
             print()
 
     print("Thank you for using ByteMap, I hope that you enjoy the meal"
@@ -103,3 +105,4 @@ def printResults(zipcode, food, sort):
 if __name__ == "__main__":
     zipcode, food, sort = getInput()
     printResults(zipcode, food, sort)
+

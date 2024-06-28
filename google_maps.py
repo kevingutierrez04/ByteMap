@@ -51,5 +51,4 @@ def get_recs(zip, query, sort="prominence"):  # def get_recs(query, zip):
     except googlemaps.exceptions.ApiError as e:
         print(f"Google Maps API Error occurred: {e}")
 
-
 # print(get_recs('10027'))
