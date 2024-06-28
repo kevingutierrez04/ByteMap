@@ -7,7 +7,10 @@ import sqlalchemy as db
 # import json
 
 load_dotenv()
+
+
 def getInput():
+
     zipcode = False
 
     while not zipcode:
@@ -17,7 +20,7 @@ def getInput():
     Please describe your preferences.
     Firstly, what is your zip code?
     '''
-                )
+                  )
 
         pattern = r"^\d{5}$"
         match = re.match(pattern, x)
@@ -28,9 +31,11 @@ def getInput():
     y = input('''
     Now, please describe to me some dietary preferences.
     '''
-            )
-    sorting = input("Would you like the results sorted by Prominence (Default), distance, or ratings?: ")
+              )
+    sorting = input("Would you like the results sorted by \
+                    Prominence (Default), distance, or ratings?: ")
     return x, y, sorting
+
 
 def printResults(zipcode, food, sort):
     prices = {
@@ -61,19 +66,22 @@ def printResults(zipcode, food, sort):
 
     with engine.connect() as connection:
         if not vicinity_renamed:
-            connection.execute(db.text("ALTER TABLE Reccomendations RENAME COLUMN vicinity to address;"))
+            connection.execute(db.text("ALTER TABLE Reccomendations \
+                                       RENAME COLUMN vicinity to address;"))
             vicinity_renamed = True
         if sort == "ratings":
             table = connection.execute(
-                db.text("SELECT name, address, rating, price_level FROM Reccomendations ORDER BY rating DESC;")
+                db.text("SELECT name, address, rating, \
+                        price_level FROM Reccomendations \
+                        ORDER BY rating DESC;")
                 )
         else:
             table = connection.execute(
-                db.text("SELECT name, address, rating, price_level FROM Reccomendations;")
+                db.text("SELECT name, address, rating, \
+                        price_level FROM Reccomendations;")
                 )
         ans = "y"
         while ans != "n":
-            
             query_result = table.fetchmany(5)
             if len(query_result) == 0:
                 print("There are no more reccomendations")
@@ -83,7 +91,10 @@ def printResults(zipcode, food, sort):
             ans = input("Would you like more reccomendations? (y/n): ")
             print()
 
-    print("Thank you for using ByteMap, I hope that you have a wonderful meal from the restaurant you chose")
+    print("Thank you for using ByteMap, I hope \
+          that you have a wonderful meal from the \
+          restaurant you chose")
+
 
 if __name__ == "__main__":
     zipcode, food, sort = getInput()

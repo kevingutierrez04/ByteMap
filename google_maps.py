@@ -9,7 +9,7 @@ GMAPS_K = os.environ.get('GMAPS_KEY')
 gmaps = googlemaps.Client(key=GMAPS_K)
 
 
-def get_recs(zip, query, sort = "prominence"):  # def get_recs(query, zip):
+def get_recs(zip, query, sort="prominence"):  # def get_recs(query, zip):
     try:
         geocode_result = gmaps.geocode(zip)[0]['geometry']['location']
         # querie = "Spicy vegetarian food"
@@ -18,16 +18,16 @@ def get_recs(zip, query, sort = "prominence"):  # def get_recs(query, zip):
         '''
         if sort == "prominence":
             response = gmaps.places_nearby(
-                location=geocode_result, 
-                radius='16093', 
-                keyword=query, 
+                location=geocode_result,
+                radius='16093',
+                keyword=query,
                 open_now=True,
                 rank_by=sort
                 )
         else:
             response = gmaps.places_nearby(
-                location=geocode_result,  
-                keyword=query, 
+                location=geocode_result,
+                keyword=query,
                 open_now=True,
                 rank_by=sort
                 )
@@ -51,5 +51,4 @@ def get_recs(zip, query, sort = "prominence"):  # def get_recs(query, zip):
     except googlemaps.exceptions.ApiError as e:
         print(f"Google Maps API Error occurred: {e}")
 
-
-#print(get_recs('10027'))
+# print(get_recs('10027'))
