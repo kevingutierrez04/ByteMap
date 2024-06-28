@@ -15,7 +15,7 @@ def getInput():
 
     while not zipcode:
         x = input('''
-Hello! Welcome to ByteMap. I'm your personalized AI Assistant ready
+Hello! Welcome to ByteMap. I'm your personalized assistant ready
 to provide local restaurant reccomendations.
 Please describe your preferences.
 Firstly, what is your zip code?
@@ -25,7 +25,7 @@ Firstly, what is your zip code?
         pattern = r"^\d{5}$"
         match = re.match(pattern, x)
         if match:
-            print(match)
+            # print(match)
             zipcode = True
 
     y = input('''
@@ -34,7 +34,7 @@ Now, please describe to me some dietary preferences.
               )
     sorting = input("Would you like the results sorted by "
                     "Prominence (Default), distance, or ratings?: ")
-    return x, y, sorting
+    return x, y, sorting.lower()
 
 
 def printResults(zipcode, food, sort):
@@ -43,7 +43,8 @@ def printResults(zipcode, food, sort):
         "1.0": "<= $10",
         "2.0": "$10 - $25",
         "3.0": "$25 - $45",
-        "4.0": ">= $45"
+        "4.0": ">= $45",
+        'nan': "Prices Unavailable"
     }
     engine = db.create_engine('sqlite:///restaurants.db')
 
@@ -81,7 +82,7 @@ def printResults(zipcode, food, sort):
                         "price_level FROM Reccomendations;")
                 )
         ans = "y"
-        while ans != "n":
+        while ans != "n" and ans != "no":
             query_result = table.fetchmany(5)
             if len(query_result) == 0:
                 print("There are no more reccomendations")
@@ -89,13 +90,12 @@ def printResults(zipcode, food, sort):
             print(pd.DataFrame(query_result))
             print()
             ans = input("Would you like more reccomendations? (y/n): ")
+            ans = ans.lower()
             print()
-
-    print("Thank you for using ByteMap, I hope "
-          "that you have a wonderful meal from the "
-          "restaurant you chose")
-
 
 if __name__ == "__main__":
     zipcode, food, sort = getInput()
     printResults(zipcode, food, sort)
+    print("Thank you for using ByteMap, I hope "
+          "that you have a wonderful meal from the "
+          "restaurant you chose")
