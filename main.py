@@ -106,4 +106,3 @@ def printResults(zipcode, food, sort):
 if __name__ == "__main__":
     zipcode, food, sort = getInput()
     printResults(zipcode, food, sort)
-
