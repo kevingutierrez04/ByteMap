@@ -15,11 +15,11 @@ def getInput():
 
     while not zipcode:
         x = input('''
-    Hello! Welcome to ByteMap. I'm your personalized AI Assistant ready
-    to provide local restaurant reccomendations.
-    Please describe your preferences.
-    Firstly, what is your zip code?
-    '''
+Hello! Welcome to ByteMap. I'm your personalized AI Assistant ready
+to provide local restaurant reccomendations.
+Please describe your preferences.
+Firstly, what is your zip code?
+'''
                   )
 
         pattern = r"^\d{5}$"
@@ -29,11 +29,11 @@ def getInput():
             zipcode = True
 
     y = input('''
-    Now, please describe to me some dietary preferences.
-    '''
+Now, please describe to me some dietary preferences.
+'''
               )
-    sorting = input("Would you like the results sorted by \
-                    Prominence (Default), distance, or ratings?: ")
+    sorting = input("Would you like the results sorted by "
+                    "Prominence (Default), distance, or ratings?: ")
     return x, y, sorting
 
 
@@ -66,19 +66,19 @@ def printResults(zipcode, food, sort):
 
     with engine.connect() as connection:
         if not vicinity_renamed:
-            connection.execute(db.text("ALTER TABLE Reccomendations \
-                                       RENAME COLUMN vicinity to address;"))
+            connection.execute(db.text("ALTER TABLE Reccomendations "
+                                       "RENAME COLUMN vicinity to address;"))
             vicinity_renamed = True
         if sort == "ratings":
             table = connection.execute(
-                db.text("SELECT name, address, rating, \
-                        price_level FROM Reccomendations \
-                        ORDER BY rating DESC;")
+                db.text("SELECT name, address, rating, "
+                        "price_level FROM Reccomendations "
+                        "ORDER BY rating DESC;")
                 )
         else:
             table = connection.execute(
-                db.text("SELECT name, address, rating, \
-                        price_level FROM Reccomendations;")
+                db.text("SELECT name, address, rating, "
+                        "price_level FROM Reccomendations;")
                 )
         ans = "y"
         while ans != "n":
@@ -91,9 +91,9 @@ def printResults(zipcode, food, sort):
             ans = input("Would you like more reccomendations? (y/n): ")
             print()
 
-    print("Thank you for using ByteMap, I hope \
-          that you have a wonderful meal from the \
-          restaurant you chose")
+    print("Thank you for using ByteMap, I hope "
+          "that you have a wonderful meal from the "
+          "restaurant you chose")
 
 
 if __name__ == "__main__":
