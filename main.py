@@ -46,7 +46,12 @@ def printResults(zipcode, food, sort):
         "2.0": "$10 - $25",
         "3.0": "$25 - $45",
         "4.0": ">= $45",
-        'nan': "Prices Unavailable"
+        'nan': "Prices Unavailable",
+        "0": "Free",
+        "1": "<= $10",
+        "2": "$10 - $25",
+        "3": "$25 - $45",
+        "4": ">= $45"
     }
     engine = db.create_engine('sqlite:///restaurants.db')
 
